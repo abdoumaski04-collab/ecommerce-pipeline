@@ -1,3 +1,28 @@
-venv/ 
-__pycache__/ 
-*.pyc 
+# Environments
+venv/
+.env
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+
+# IDE
+.vscode/
+.idea/
+
+# Data files (si tu ne veux pas versionner les JSON)
+data/*.json
+!data/.gitkeep
+
+# Logs
+*.log
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
