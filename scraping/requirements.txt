@@ -1,0 +1,6 @@
+scrapy>=2.11
+beautifulsoup4>=4.12
+itemadapter>=0.9
+pandas>=2.2
+lxml>=5.0
+ 

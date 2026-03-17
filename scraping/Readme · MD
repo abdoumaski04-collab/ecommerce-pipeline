@@ -1,0 +1,74 @@
+# Scraping Module — eBay Price Intelligence
+
+## Responsable
+**[adnane]** — Rôle : Data Analyst
+
+## Ce que fait ce module
+Collecte automatiquement les prix de produits électroniques sur eBay
+(smartphones, laptops, tablets) pour alimenter le pipeline de data engineering.
+
+## Structure
+```
+scraping/
+├── ebay_scraper/
+│   ├── spiders/
+│   │   └── ebay_spider.py    ← Spider principal (Étape 1)
+│   ├── bs4_parser.py          ← Parser HTML complexe (Étape 2)
+│   ├── pipelines.py           ← Nettoyage & déduplication (Étape 3)
+│   ├── settings.py            ← Configuration globale
+│   └── __init__.py
+├── data/                      ← Données scrapées (gitignored)
+├── logs/                      ← Logs Scrapy (gitignored)
+├── requirements.txt
+├── scrapy.cfg
+└── README.md
+```
+
+## Installation
+```bash
+cd scraping/
+pip install -r requirements.txt
+mkdir -p data logs
+```
+
+## Utilisation
+```bash
+# Toutes les catégories (smartphones + laptops + tablets)
+scrapy crawl ebay_electronics
+
+# Une catégorie, 10 pages (~480 produits)
+scrapy crawl ebay_electronics -a category=laptops -a max_pages=10
+
+# Sortie CSV directe
+scrapy crawl ebay_electronics -o data/run_manual.csv
+```
+
+## Données collectées par produit
+| Champ | Type | Description |
+|-------|------|-------------|
+| product_id | str | ID unique eBay |
+| title | str | Titre du produit |
+| category | str | smartphones / laptops / tablets |
+| source | str | "ebay" (pour comparer avec Amazon) |
+| price | float | Prix en valeur numérique |
+| currency | str | USD / EUR / GBP |
+| condition | str | New / Used / Refurbished |
+| free_shipping | bool | Livraison gratuite |
+| seller_name | str | Nom du vendeur |
+| seller_score | str | Score feedback vendeur |
+| rating | float | Note produit (0-5) |
+| reviews_count | int | Nombre d'avis |
+| item_location | str | Pays d'expédition |
+| scraped_at | str | Timestamp UTC ISO8601 |
+| scraped_date | str | Date YYYY-MM-DD |
+| scraped_hour | int | Heure (0-23) |
+| spec_* | str | Specs techniques (BeautifulSoup) |
+
+## Intégration dans le pipeline
+```
+scrapy crawl ebay_electronics
+    → data/ebay_TIMESTAMP.csv
+    → data/ebay_TIMESTAMP.json
+        → Airflow DAG lit le CSV
+        → bigtable_loader.py charge dans GCP Bigtable
+```

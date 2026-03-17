@@ -1,6 +1,18 @@
+# Données scrapées — trop volumineuses pour GitHub
 data/
+ 
+# Logs Scrapy
 logs/
+ 
+# Cache Python
 __pycache__/
 *.pyc
+*.pyo
 .scrapy/
-*.egg-info/
+ 
+# Environnement virtuel
+venv/
+.env
+ 
+# Fichiers système
+.DS_Store
